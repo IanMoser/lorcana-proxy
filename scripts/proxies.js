@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     const searchContainer = document.getElementById("searchContainer");
     const addCardButton = document.getElementById("addCardButton");
     const printButton = document.getElementById("printButton");
+    const importButton = document.getElementById("importButton");
+    const importContainer = document.getElementById("importContainer");
+    const importText = document.getElementById("importText");
+    const doImportButton = document.getElementById("doImportButton");
 
     let proxiedCards = [];
 
@@ -113,5 +117,44 @@ document.addEventListener("DOMContentLoaded", async function () {
                 });
             });
               });
+    });
+
+    importButton.addEventListener("click", () => {
+        importContainer.showModal();
+    });
+
+    importContainer.querySelector('[data-role=close]').addEventListener('click', () => {
+        importContainer.close();
+    });
+
+    doImportButton.addEventListener("click", async () => {
+        const lines = importText.value.split("\n");
+        importContainer.close();
+
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+
+            const match = line.match(/^(\d+)\s+(.+)$/);
+            if (match) {
+                const count = parseInt(match[1], 10);
+                const name = match[2];
+
+                try {
+                    const response = await fetch(`https://api.lorcast.com/v0/cards/search?q=${encodeURIComponent(name)}`);
+                    const data = await response.json();
+
+                    if (data.results && data.results.length > 0) {
+                        const card = data.results[0];
+                        for (let i = 0; i < count; i++) {
+                            proxiedCards.push(card);
+                            addCardToContainer(card, cardsContainer);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch", name, e);
+                }
+            }
+        }
     });
 })

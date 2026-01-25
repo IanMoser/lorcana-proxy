@@ -29,6 +29,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h1>TCG Card PDF Generator</h1>
             <h2>Custom proxy list</h2>
             <div class="d-flex">
+                <button id="importButton" class="button">Import Decklist</button>
                 <button id="printButton" class="button">Generate PDF</button>
                 <a href="index.html" class="button">
                     Back
@@ -56,6 +57,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div id="cardSelectionContainer" class="cards">
 
             </div>
+        </div>
+    </dialog>
+
+    <dialog id="importContainer">
+        <button data-role="close">x</button>
+        <div>
+            <label for="importText">Paste Decklist (e.g. "4 Card Name")</label>
+            <textarea id="importText" style="width: 100%; height: 300px; margin-bottom: 10px;"></textarea>
+            <button id="doImportButton" class="button">Import Cards</button>
         </div>
     </dialog>
 
