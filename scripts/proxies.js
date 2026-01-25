@@ -138,14 +138,24 @@ document.addEventListener("DOMContentLoaded", async function () {
             const match = line.match(/^(\d+)\s+(.+)$/);
             if (match) {
                 const count = parseInt(match[1], 10);
-                const name = match[2];
+                const name = match[2].trim();
 
                 try {
                     const response = await fetch(`https://api.lorcast.com/v0/cards/search?q=${encodeURIComponent(name)}`);
                     const data = await response.json();
 
                     if (data.results && data.results.length > 0) {
-                        const card = data.results[0];
+                        let card = data.results[0];
+
+                        const lowerName = name.toLowerCase();
+                        const exactMatch = data.results.find(c => {
+                            const cName = c.name.toLowerCase();
+                            const cFullName = c.version ? `${cName} - ${c.version.toLowerCase()}` : cName;
+                            return cName === lowerName || cFullName === lowerName;
+                        });
+
+                        if (exactMatch) card = exactMatch;
+
                         for (let i = 0; i < count; i++) {
                             proxiedCards.push(card);
                             addCardToContainer(card, cardsContainer);
