@@ -141,8 +141,15 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const name = match[2].trim();
 
                 try {
-                    const response = await fetch(`https://api.lorcast.com/v0/cards/search?q=${encodeURIComponent(name)}`);
-                    const data = await response.json();
+                    let response = await fetch(`https://api.lorcast.com/v0/cards/search?q=${encodeURIComponent(name)}`);
+                    let data = await response.json();
+
+                    // If no results found and the name looks like "Name - Version", try searching just the Name
+                    if ((!data.results || data.results.length === 0) && name.includes(" - ")) {
+                        const simpleName = name.split(" - ")[0].trim();
+                        response = await fetch(`https://api.lorcast.com/v0/cards/search?q=${encodeURIComponent(simpleName)}`);
+                        data = await response.json();
+                    }
 
                     if (data.results && data.results.length > 0) {
                         let card = data.results[0];
