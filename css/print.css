@@ -9,12 +9,20 @@
         display: none;
     }
 
+    .cards {
+        gap: 0;
+        justify-content: flex-start;
+    }
+
     .display-only {
         display: none;
     }
 
     .card {
         background-color: #000;
+        width: 63mm !important;
+        height: 88mm !important;
+        flex: 0 0 auto;
     }
 
     @page {
